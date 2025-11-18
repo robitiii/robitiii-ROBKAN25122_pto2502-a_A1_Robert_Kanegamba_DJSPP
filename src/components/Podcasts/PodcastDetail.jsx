@@ -4,6 +4,7 @@ import styles from "./PodcastDetail.module.css";
 import { formatDate } from "../../utils/formatDate";
 import GenreTags from "../UI/GenreTags";
 import { AudioPlayerContext } from "../../context/AudioPlayerContext";
+import { FavouritesContext } from "../../context/FavouritesContext";
 
 export default function PodcastDetail({ podcast, genres }) {
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
@@ -11,6 +12,7 @@ export default function PodcastDetail({ podcast, genres }) {
   const navigate = useNavigate(); // ← hook for navigation
   const { playEpisode, pause, currentTrack, isPlaying } =
     useContext(AudioPlayerContext);
+  const { toggleFavourite, isFavourite } = useContext(FavouritesContext);
 
   return (
     <div className={styles.container}>
@@ -94,6 +96,12 @@ export default function PodcastDetail({ podcast, genres }) {
               currentTrack.seasonIndex === selectedSeasonIndex &&
               currentTrack.episodeIndex === index;
 
+            const favourite = isFavourite({
+              showId: podcast.id,
+              seasonIndex: selectedSeasonIndex,
+              episodeIndex: index,
+            });
+
             const handleEpisodeClick = () => {
               if (isActive && isPlaying) {
                 pause();
@@ -107,6 +115,19 @@ export default function PodcastDetail({ podcast, genres }) {
                 episodeIndex: index,
                 episodeTitle: ep.title,
                 audioUrl: ep.file,
+                image: season.image,
+              });
+            };
+
+            const handleFavouriteClick = () => {
+              toggleFavourite({
+                showId: podcast.id,
+                seasonIndex: selectedSeasonIndex,
+                episodeIndex: index,
+                showTitle: podcast.title,
+                seasonNumber: selectedSeasonIndex + 1,
+                episodeNumber: index + 1,
+                episodeTitle: ep.title,
                 image: season.image,
               });
             };
@@ -126,6 +147,18 @@ export default function PodcastDetail({ podcast, genres }) {
                   onClick={handleEpisodeClick}
                 >
                   {isActive && isPlaying ? "Pause" : "Play"}
+                </button>
+                <button
+                  type="button"
+                  className={styles.episodeFavouriteButton}
+                  onClick={handleFavouriteClick}
+                  aria-label={
+                    favourite
+                      ? "Remove episode from favourites"
+                      : "Add episode to favourites"
+                  }
+                >
+                  {favourite ? "♥" : "♡"}
                 </button>
               </div>
             );
