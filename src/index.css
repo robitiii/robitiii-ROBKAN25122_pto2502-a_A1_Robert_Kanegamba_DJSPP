@@ -8,6 +8,11 @@ body[data-theme="light"] {
   --header-bg: #ffffff;
   --header-text: #111111;
   --card-bg: #ffffff;
+  --control-bg: #ffffff;
+  --control-border: #cccccc;
+  --control-text: #111111;
+  --chip-bg: #eeeeee;
+  --chip-text: #111111;
 }
 
 body[data-theme="dark"] {
@@ -16,6 +21,11 @@ body[data-theme="dark"] {
   --header-bg: #1e1e1e;
   --header-text: #f5f5f5;
   --card-bg: #1e1e1e;
+  --control-bg: #1f2933;
+  --control-border: #4b5563;
+  --control-text: #f5f5f5;
+  --chip-bg: #374151;
+  --chip-text: #f5f5f5;
 }
 
 body {
