@@ -3,6 +3,8 @@ import Header from "./components/UI/Header";
 import Home from "./pages/Home";
 import ShowDetail from "./pages/ShowDetail";
 import { PodcastProvider } from "./context/PodcastContext";
+import { AudioPlayerProvider } from "./context/AudioPlayerContext";
+import GlobalAudioPlayer from "./components/UI/GlobalAudioPlayer";
 
 /**
  * Root component of the Podcast Explorer app.
@@ -17,7 +19,7 @@ import { PodcastProvider } from "./context/PodcastContext";
  */
 export default function App() {
   return (
-    <>
+    <AudioPlayerProvider>
       <Header />
       <PodcastProvider>
         <Routes>
@@ -25,6 +27,7 @@ export default function App() {
           <Route path={`/show/:id`} element={<ShowDetail />} />
         </Routes>
       </PodcastProvider>
-    </>
+      <GlobalAudioPlayer />
+    </AudioPlayerProvider>
   );
 }
