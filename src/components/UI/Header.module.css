@@ -11,6 +11,16 @@
   color: var(--header-text);
 }
 
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navLink {
+  font-size: 0.95rem;
+}
+
 .themeToggle {
   border: none;
   background: transparent;
