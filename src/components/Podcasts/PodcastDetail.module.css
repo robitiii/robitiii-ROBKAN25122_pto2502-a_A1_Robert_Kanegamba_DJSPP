@@ -164,6 +164,18 @@ strong {
   margin-left: 10px;
 }
 
+.episodePlayButton {
+  margin-left: auto;
+  align-self: center;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 0.8rem;
+}
+
 .episodeTitle {
   font-weight: bold;
   font-size: 0.95rem;
