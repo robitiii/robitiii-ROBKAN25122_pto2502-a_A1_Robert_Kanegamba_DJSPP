@@ -2,11 +2,24 @@
   display: flex;
   justify-content: space-between;
   padding: 1rem;
-  background: white;
+  background: var(--header-bg);
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 }
 
 .appHeader a {
   text-decoration: none;
-  color: black;
+  color: var(--header-text);
+}
+
+.themeToggle {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--header-text);
+}
+
+.themeToggle:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
