@@ -12,14 +12,19 @@ export default function Header() {
         {" "}
         <Link to="/">🎙️ Podcast App</Link>
       </h1>
-      <button
-        type="button"
-        className={styles.themeToggle}
-        onClick={toggleTheme}
-        aria-label="Toggle color theme"
-      >
-        {theme === "light" ? "🌞" : "🌙"}
-      </button>
+      <nav className={styles.nav}>
+        <Link to="/favourites" className={styles.navLink}>
+          Favourites
+        </Link>
+        <button
+          type="button"
+          className={styles.themeToggle}
+          onClick={toggleTheme}
+          aria-label="Toggle color theme"
+        >
+          {theme === "light" ? "🌞" : "🌙"}
+        </button>
+      </nav>
     </header>
   );
 }
