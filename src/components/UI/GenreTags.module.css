@@ -3,11 +3,12 @@
 }
 
 .tag {
-  background: #eee;
+  background: var(--chip-bg);
   padding: 0.3rem 0.6rem;
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
   border-radius: 4px;
   display: inline-block;
   font-size: 0.8rem;
+  color: var(--chip-text);
 }
