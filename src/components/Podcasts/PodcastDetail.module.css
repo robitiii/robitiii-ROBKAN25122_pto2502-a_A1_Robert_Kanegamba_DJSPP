@@ -11,7 +11,7 @@ strong {
 .header {
   display: flex;
   gap: 2rem;
-  background: white;
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -61,10 +61,11 @@ strong {
 }
 
 .genreBadge {
-  background-color: #e5e7eb;
+  background-color: var(--chip-bg);
   padding: 0.3rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.85rem;
+  color: var(--chip-text);
 }
 
 .metaInfo p {
@@ -86,7 +87,7 @@ strong {
 }
 
 .seasonDetails {
-  background: white;
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -110,10 +111,13 @@ strong {
 .dropdown {
   padding: 0.4rem 0.6rem;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--control-border);
   min-width: 140px;
   height: 40px;
   order: 2;
+  background-color: var(--control-bg);
+  color: var(--control-text);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .seasonCover,
@@ -143,7 +147,7 @@ strong {
 
 .episodeCard {
   display: flex;
-  background: #f9fafb;
+  background: var(--bg-color);
   padding: 1rem;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
@@ -152,7 +156,7 @@ strong {
 
 .episodeCard:hover {
   transform: translateY(-4px);
-  background: #ffffff;
+  background: var(--card-bg);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   border-color: #d1d5db;
 }
