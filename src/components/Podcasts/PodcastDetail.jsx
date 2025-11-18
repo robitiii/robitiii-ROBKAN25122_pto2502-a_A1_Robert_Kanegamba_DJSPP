@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom"; // ← add this
 import styles from "./PodcastDetail.module.css";
 import { formatDate } from "../../utils/formatDate";
 import GenreTags from "../UI/GenreTags";
+import { AudioPlayerContext } from "../../context/AudioPlayerContext";
 
 export default function PodcastDetail({ podcast, genres }) {
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
   const season = podcast.seasons[selectedSeasonIndex];
   const navigate = useNavigate(); // ← hook for navigation
+  const { playEpisode, pause, currentTrack, isPlaying } =
+    useContext(AudioPlayerContext);
 
   return (
     <div className={styles.container}>
@@ -84,17 +87,49 @@ export default function PodcastDetail({ podcast, genres }) {
         </div>
 
         <div className={styles.episodeList}>
-          {season.episodes.map((ep, index) => (
-            <div key={index} className={styles.episodeCard}>
-              <img className={styles.episodeCover} src={season.image} alt="" />
-              <div className={styles.episodeInfo}>
-                <p className={styles.episodeTitle}>
-                  Episode {index + 1}: {ep.title}
-                </p>
-                <p className={styles.episodeDesc}>{ep.description}</p>
+          {season.episodes.map((ep, index) => {
+            const isActive =
+              currentTrack &&
+              currentTrack.showId === podcast.id &&
+              currentTrack.seasonIndex === selectedSeasonIndex &&
+              currentTrack.episodeIndex === index;
+
+            const handleEpisodeClick = () => {
+              if (isActive && isPlaying) {
+                pause();
+                return;
+              }
+
+              playEpisode({
+                showId: podcast.id,
+                showTitle: podcast.title,
+                seasonIndex: selectedSeasonIndex,
+                episodeIndex: index,
+                episodeTitle: ep.title,
+                audioUrl: ep.file,
+                image: season.image,
+              });
+            };
+
+            return (
+              <div key={index} className={styles.episodeCard}>
+                <img className={styles.episodeCover} src={season.image} alt="" />
+                <div className={styles.episodeInfo}>
+                  <p className={styles.episodeTitle}>
+                    Episode {index + 1}: {ep.title}
+                  </p>
+                  <p className={styles.episodeDesc}>{ep.description}</p>
+                </div>
+                <button
+                  type="button"
+                  className={styles.episodePlayButton}
+                  onClick={handleEpisodeClick}
+                >
+                  {isActive && isPlaying ? "Pause" : "Play"}
+                </button>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
