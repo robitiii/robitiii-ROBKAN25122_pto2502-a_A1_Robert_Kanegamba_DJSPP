@@ -13,8 +13,12 @@ export default function Header() {
         <Link to="/">🎙️ Podcast App</Link>
       </h1>
       <nav className={styles.nav}>
-        <Link to="/favourites" className={styles.navLink}>
-          Favourites
+        <Link
+          to="/favourites"
+          className={`${styles.navLink} ${styles.navHeart}`}
+          aria-label="View favourite episodes"
+        >
+          ♥
         </Link>
         <button
           type="button"
