@@ -51,6 +51,8 @@ export function FavouritesProvider({ children }) {
         episodeNumber: meta.episodeNumber,
         episodeTitle: meta.episodeTitle,
         image: meta.image,
+        description: meta.description,
+        audioUrl: meta.audioUrl,
         addedAt: new Date().toISOString(),
       };
 
