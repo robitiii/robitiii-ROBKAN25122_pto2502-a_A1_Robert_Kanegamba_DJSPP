@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { FavouritesContext } from "../context/FavouritesContext";
+import { AudioPlayerContext } from "../context/AudioPlayerContext";
 import styles from "./Favourites.module.css";
 
 function formatDateTime(isoString) {
@@ -10,20 +11,23 @@ function formatDateTime(isoString) {
 
 export default function Favourites() {
   const { favourites, toggleFavourite } = useContext(FavouritesContext);
+  const { playEpisode, pause, currentTrack, isPlaying } =
+    useContext(AudioPlayerContext);
   const [sortKey, setSortKey] = useState("date-desc");
-  const navigate = useNavigate();
+  const [showFilter, setShowFilter] = useState("all");
 
   if (!favourites.length) {
     return (
       <main className={styles.main}>
-        <button
-          type="button"
-          className={styles.backButton}
-          onClick={() => navigate("/")}
-        >
-          Back
-        </button>
-        <h2 className={styles.heading}>Favourites</h2>
+        <Link to="/" className={styles.backButton}>
+          ← Back
+        </Link>
+        <header className={styles.pageHeader}>
+          <h1 className={styles.pageTitle}>Favourite Episodes</h1>
+          <p className={styles.pageSubtitle}>
+            Your saved episodes from all shows.
+          </p>
+        </header>
         <p className={styles.empty}>You have no favourite episodes yet.</p>
       </main>
     );
@@ -47,73 +51,179 @@ export default function Favourites() {
       break;
   }
 
-  const groupsByShow = sorted.reduce((acc, fav) => {
-    const key = String(fav.showId);
-    if (!acc[key]) {
-      acc[key] = { showId: fav.showId, showTitle: fav.showTitle, items: [] };
-    }
-    acc[key].items.push(fav);
-    return acc;
-  }, {});
+  const showOptions = useMemo(() => {
+    const map = new Map();
+    favourites.forEach((fav) => {
+      const key = String(fav.showId);
+      if (!map.has(key)) {
+        map.set(key, fav.showTitle);
+      }
+    });
+    return Array.from(map.entries()).map(([value, label]) => ({
+      value,
+      label,
+    }));
+  }, [favourites]);
 
-  const groupList = Object.values(groupsByShow);
+  const filteredByShow =
+    showFilter === "all"
+      ? sorted
+      : sorted.filter((fav) => String(fav.showId) === showFilter);
+
+  const groupList = Object.values(
+    filteredByShow.reduce((acc, fav) => {
+      const key = String(fav.showId);
+      if (!acc[key]) {
+        acc[key] = {
+          showId: fav.showId,
+          showTitle: fav.showTitle,
+          items: [],
+        };
+      }
+      acc[key].items.push(fav);
+      return acc;
+    }, {}),
+  );
 
   return (
     <main className={styles.main}>
-      <button
-        type="button"
-        className={styles.backButton}
-        onClick={() => navigate("/")}
-      >
-         Back
-      </button>
-      <div className={styles.headerRow}>
-        <h2 className={styles.heading}>Favourites</h2>
-        <select
-          className={styles.sortSelect}
-          value={sortKey}
-          onChange={(event) => setSortKey(event.target.value)}
-        >
-          <option value="title-asc">Title A–Z</option>
-          <option value="title-desc">Title Z–A</option>
-          <option value="date-desc">Date added (newest)</option>
-          <option value="date-asc">Date added (oldest)</option>
-        </select>
+      <Link to="/" className={styles.backButton}>
+        ← Back
+      </Link>
+      <header className={styles.pageHeader}>
+        <h1 className={styles.pageTitle}>Favourite Episodes</h1>
+        <p className={styles.pageSubtitle}>
+          Your saved episodes from all shows.
+        </p>
+      </header>
+
+      <div className={styles.controlsRow}>
+        <div className={styles.controlGroup}>
+          <span className={styles.controlLabel}>Sort by:</span>
+          <select
+            className={styles.sortSelect}
+            value={sortKey}
+            onChange={(event) => setSortKey(event.target.value)}
+          >
+            <option value="date-desc">Newest Added</option>
+            <option value="date-asc">Oldest Added</option>
+            <option value="title-asc">Title A–Z</option>
+            <option value="title-desc">Title Z–A</option>
+          </select>
+        </div>
+
+        <div className={styles.controlGroup}>
+          <span className={styles.controlLabel}>Show:</span>
+          <select
+            className={styles.showSelect}
+            value={showFilter}
+            onChange={(event) => setShowFilter(event.target.value)}
+          >
+            <option value="all">All Shows</option>
+            {showOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {groupList.map((group) => (
         <section key={group.showId} className={styles.showSection}>
-          <h3 className={styles.showTitle}>{group.showTitle}</h3>
+          <div className={styles.showHeader}>
+            <h3 className={styles.showTitle}>{group.showTitle}</h3>
+            <span className={styles.showCount}>
+              {group.items.length} episode
+              {group.items.length === 1 ? "" : "s"}
+            </span>
+          </div>
           <ul className={styles.list}>
             {group.items.map((fav) => (
               <li key={fav.id} className={styles.itemRow}>
-                <div className={styles.itemMain}>
-                  <div className={styles.itemTitle}>{fav.episodeTitle}</div>
-                  <div className={styles.itemMeta}>
-                    <span>
+                <div className={styles.itemLeft}>
+                  <div className={styles.coverBox}>
+                    {fav.image && (
+                      <img
+                        src={fav.image}
+                        alt={fav.showTitle}
+                        className={styles.coverImage}
+                      />
+                    )}
+                  </div>
+                  <div className={styles.itemMain}>
+                    <div className={styles.itemTitle}>{fav.episodeTitle}</div>
+                    <div className={styles.itemMetaTop}>
                       Season {fav.seasonNumber} · Episode {fav.episodeNumber}
-                    </span>
-                    <span>Added {formatDateTime(fav.addedAt)}</span>
+                    </div>
+                    {fav.description && (
+                      <div className={styles.itemDescription}>{fav.description}</div>
+                    )}
+                    <div className={styles.itemMetaBottom}>
+                      Added {formatDateTime(fav.addedAt)}
+                    </div>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  className={styles.itemHeart}
-                  onClick={() =>
-                    toggleFavourite({
-                      showId: fav.showId,
-                      seasonIndex: fav.seasonIndex,
-                      episodeIndex: fav.episodeIndex,
-                      showTitle: fav.showTitle,
-                      seasonNumber: fav.seasonNumber,
-                      episodeNumber: fav.episodeNumber,
-                      episodeTitle: fav.episodeTitle,
-                      image: fav.image,
-                    })
-                  }
-                >
-                  ♥
-                </button>
+
+                <div className={styles.itemActions}>
+                  <button
+                    type="button"
+                    className={styles.itemHeart}
+                    onClick={() =>
+                      toggleFavourite({
+                        showId: fav.showId,
+                        seasonIndex: fav.seasonIndex,
+                        episodeIndex: fav.episodeIndex,
+                        showTitle: fav.showTitle,
+                        seasonNumber: fav.seasonNumber,
+                        episodeNumber: fav.episodeNumber,
+                        episodeTitle: fav.episodeTitle,
+                        image: fav.image,
+                        description: fav.description,
+                        audioUrl: fav.audioUrl,
+                      })
+                    }
+                    aria-label="Remove episode from favourites"
+                  >
+                    ♥
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.playButton}
+                    onClick={() => {
+                      const isActive =
+                        currentTrack &&
+                        currentTrack.showId === fav.showId &&
+                        currentTrack.seasonIndex === fav.seasonIndex &&
+                        currentTrack.episodeIndex === fav.episodeIndex;
+
+                      if (isActive && isPlaying) {
+                        pause();
+                        return;
+                      }
+
+                      playEpisode({
+                        showId: fav.showId,
+                        showTitle: fav.showTitle,
+                        seasonIndex: fav.seasonIndex,
+                        episodeIndex: fav.episodeIndex,
+                        episodeTitle: fav.episodeTitle,
+                        audioUrl:
+                          fav.audioUrl ||
+                          "https://podcast-api.netlify.app/placeholder-audio.mp3",
+                        image: fav.image,
+                      });
+                    }}
+                  >
+                    {currentTrack &&
+                    currentTrack.showId === fav.showId &&
+                    currentTrack.seasonIndex === fav.seasonIndex &&
+                    currentTrack.episodeIndex === fav.episodeIndex &&
+                    isPlaying
+                      ? "Pause"
+                      : "Play"}
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
