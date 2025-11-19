@@ -129,6 +129,8 @@ export default function PodcastDetail({ podcast, genres }) {
                 episodeNumber: index + 1,
                 episodeTitle: ep.title,
                 image: season.image,
+                description: ep.description,
+                audioUrl: ep.file,
               });
             };
 
