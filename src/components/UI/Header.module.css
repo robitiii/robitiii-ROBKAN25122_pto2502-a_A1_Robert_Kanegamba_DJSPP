@@ -21,6 +21,12 @@
   font-size: 0.95rem;
 }
 
+.appHeader .navHeart {
+  font-size: 1.4rem;
+  color: #e63946;
+  line-height: 1;
+}
+
 .themeToggle {
   border: none;
   background: transparent;
