@@ -4,6 +4,21 @@
   padding: 1.5rem 1rem 4.5rem;
 }
 
+.backButton {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+  padding: 0;
+  font-weight: 600;
+}
+
+.backButton:hover {
+  color: #2563eb;
+}
+
 .heading {
   margin: 0;
 }
