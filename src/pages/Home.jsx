@@ -3,6 +3,7 @@ import {
   SortSelect,
   GenreFilter,
   PodcastGrid,
+  RecommendedCarousel,
   Pagination,
   Loading,
   Error,
@@ -26,7 +27,7 @@ import { useContext } from "react";
  * @returns {JSX.Element} The home page content with filters, results, and feedback states.
  */
 export default function Home() {
-  const { podcasts, loading, error } = useContext(PodcastContext);
+  const { loading, error } = useContext(PodcastContext);
 
   return (
     <main className={styles.main}>
@@ -43,6 +44,7 @@ export default function Home() {
 
       {!loading && !error && (
         <>
+          <RecommendedCarousel />
           <PodcastGrid />
           <Pagination />
         </>
