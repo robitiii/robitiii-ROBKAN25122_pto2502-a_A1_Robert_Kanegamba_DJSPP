@@ -234,7 +234,7 @@ The file `index.html` includes **Open Graph** and **Twitter Card** meta tags so 
 
 Update these values to match your deployment:
 
-- `og:url` – set to your deployed URL, e.g. `https://your-project-name.vercel.app/`.
+- `og:url` – set to your deployed URL, e.g. `https://robitiii-robkan-25122-pto2502-a-a1-delta.vercel.app/`.
 - `og:image` / `twitter:image` – set to an absolute URL of a social preview image.
 - `description` fields – adjust wording if desired.
 
@@ -248,9 +248,3 @@ You can validate your meta tags using tools like **metatags.io** or each platfor
 - CSS Modules keep styles local to each component/page.
 - Core state is centralized in small, focused contexts to keep prop‑drilling minimal.
 - `localStorage` is used only for non-sensitive persistence (theme, favourites).
-
----
-
-## License / Usage
-
-This project is intended as a DJSPP portfolio piece and learning project. Adapt or extend it as needed for your coursework or personal portfolio.
